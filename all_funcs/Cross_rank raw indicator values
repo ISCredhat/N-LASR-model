@@ -1,0 +1,21 @@
+num_stocks = len(tickers)
+
+#cros rank and scale rankings of indicators
+def cross_rank(matrix):
+    ranked_matrix = np.zeros(matrix.shape)
+
+    for j in range(matrix.shape[1]): 
+        
+        for k in range(matrix.shape[2]):
+            
+            values_at_time_j = matrix[:, j, k]
+            
+            ranked_values = pd.Series(values_at_time_j).rank() / num_stocks
+
+            ranked_values = ranked_values.fillna(0)
+            
+            ranked_matrix[:, j, k] = ranked_values.to_numpy()
+
+    return ranked_matrix
+
+print('Done')
