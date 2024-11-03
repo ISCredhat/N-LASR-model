@@ -1,0 +1,20 @@
+def quantiler(matrix):
+        quantiled_matrix = np.zeros(matrix.shape)
+    
+        for j in range(matrix.shape[1]): 
+            
+            for k in range(matrix.shape[2]):
+    
+                values_at_time_j = matrix[:, j, k]
+                values_series = pd.Series(values_at_time_j)
+    
+                quantiled_vals = pd.cut(
+                    values_series,
+                    bins=[(i/quantile_var) for i in range(quantile_var+1)], 
+                    labels=[i+1 for i in range(quantile_var)], 
+                    include_lowest=True
+                ).astype(int)
+                
+                quantiled_matrix[:, j, k] = quantiled_vals.to_numpy()
+    
+        return quantiled_matrix
