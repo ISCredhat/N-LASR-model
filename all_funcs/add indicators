@@ -1,0 +1,149 @@
+def add_indicators(matrix, k):
+      rolling_window = indicator_rolling_var
+      
+      open_col = pd.Series(matrix[k, :, 0])
+      high_col = pd.Series(matrix[k, :, 1])
+      low_col = pd.Series(matrix[k, :, 2])
+      close_col = pd.Series(matrix[k, :, 3])
+      volume_col = pd.Series(matrix[k, :, 4])
+  
+      # Calculate indicators for the matrix
+      fisher = ta.fisher(high_col, low_col).iloc[:, 0].astype('float64')
+      dpo = ta.dpo(close_col)
+      corr = close_col.rolling(window=14).corr(close_col.shift(1))
+      adx = ta.adx(high_col, low_col, close_col)
+      rsi = ta.rsi(close_col)
+      uo = ta.uo(high_col, low_col, close_col)
+      willr = ta.willr(high_col, low_col, close_col)
+      kc_upper = ta.kc(high_col, low_col, close_col)
+      kama = ta.kama(close_col)
+      vtx = ta.vortex(high_col, low_col, close_col)
+      cmf = ta.cmf(high_col, low_col, close_col, volume_col)
+      kst = ta.kst(close_col)
+      eom = ta.eom(high_col, low_col, close_col, volume_col)
+      bop = ta.bop(open_col, high_col, low_col, close_col)
+      cci = ta.cci(high_col, low_col, close_col)
+      cmo = ta.cmo(close_col)
+      efi = (ta.efi(close_col, volume_col) - open_col) / open_col
+      eri = (ta.eri(high_col, low_col, close_col) - open_col) / open_col
+      ema = (ta.ema(close_col) - open_col) / open_col
+      hma = (ta.hma(close_col) - open_col) / open_col
+      linreg = (ta.linreg(close_col) - open_col) / open_col
+      slope = (ta.slope(close_col) - open_col) / open_col
+      median = (ta.median(close_col) - open_col) / open_col
+      macd = (ta.macd(close_col).iloc[:, 0] - open_col) / open_col
+      mom = (ta.mom(close_col) - open_col) / open_col
+      obv = (ta.obv(close_col, volume_col) - open_col) / open_col
+      pvo = (ta.pvo(volume_col).iloc[:, 0] - open_col) / open_col
+      roc = (ta.roc(close_col) - open_col) / open_col
+      pvt = (ta.pvt(close_col, volume_col) - open_col) / open_col
+      sma = (ta.sma(close_col) - open_col) / open_col
+      stddev = (ta.stdev(close_col) - open_col) / open_col
+      supertrend = (ta.supertrend(high_col, low_col, close_col).iloc[:, 0] - open_col) / open_col
+      t3 = (ta.t3(close_col) - open_col) / open_col
+      trima = (ta.trima(close_col) - open_col) / open_col
+      true_range = (ta.true_range(high_col, low_col, close_col) - open_col) / open_col
+      wma = (ta.wma(close_col) - open_col) / open_col
+      tema = (ta.tema(close_col) - open_col) / open_col
+      nvi = (ta.nvi(close_col, volume_col) - open_col) / open_col
+      nvi = nvi.infer_objects()
+      pvi = (ta.pvi(close_col, volume_col) - open_col) / open_col
+      pvi = pvi.infer_objects()
+      chop = (ta.chop(high_col, low_col, close_col) - open_col) / open_col
+      atr = (ta.atr(high_col, low_col, close_col) - open_col) / open_col
+      ao = (ta.ao(high_col, low_col) - open_col) / open_col
+      dm = (ta.dm(high_col, low_col).iloc[:, 0] - open_col) / open_col
+      dema = (ta.dema(close_col) - open_col) / open_col
+      bias = (ta.bias(close_col) - open_col) / open_col
+      cfo = (ta.cfo(close_col) - open_col) / open_col
+      cti = (ta.cti(close_col) - open_col) / open_col
+      inertia = (ta.inertia(close_col) - open_col) / open_col
+      inertia = inertia.infer_objects()
+      ppo = (ta.ppo(close_col).iloc[:, 0] - open_col) / open_col
+      trix = (ta.trix(close_col).iloc[:, 0] - open_col) / open_col
+      alma = (ta.alma(close_col) - open_col) / open_col
+      fwma = (ta.fwma(close_col) - open_col) / open_col
+      hilo = (ta.hilo(high_col, low_col, close_col).iloc[:, 0] - open_col) / open_col
+      hl2 = (ta.hl2(high_col, low_col) - open_col) / open_col
+      hwma = (ta.hwma(close_col) - open_col) / open_col
+      midpoint = (ta.midpoint(close_col) - open_col) / open_col
+      midprice = (ta.midprice(high_col, low_col) - open_col) / open_col
+      pwma = (ta.pwma(close_col) - open_col) / open_col
+      sinwma = (ta.sinwma(close_col) - open_col) / open_col
+      percent_return = ta.percent_return(close_col)
+      percent_return = percent_return.infer_objects()  # Add this only if it triggers the same warning   # Percent return doesn't need rolling mean
+      kurtosis = (ta.kurtosis(close_col) - open_col) / open_col
+      mad = (ta.mad(close_col) - open_col) / open_col
+      skew = (ta.skew(close_col) - open_col) / open_col
+      variance = (ta.variance(close_col) - open_col) / open_col
+  
+      new_columns = [
+          fisher - fisher.rolling(rolling_window).mean(),
+          dpo - dpo.rolling(rolling_window).mean(),
+          corr - corr.rolling(rolling_window).mean(),
+          adx['ADX_14'] - adx['ADX_14'].rolling(rolling_window).mean(),
+          rsi - rsi.rolling(rolling_window).mean(),
+          uo - uo.rolling(rolling_window).mean(),
+          willr - willr.rolling(rolling_window).mean(),
+          kc_upper - kc_upper.rolling(rolling_window).mean(),
+          kama - kama.rolling(rolling_window).mean(),
+          vtx - vtx.rolling(rolling_window).mean(),
+          cmf - cmf.rolling(rolling_window).mean(),
+          kst - kst.rolling(rolling_window).mean(),
+          eom - eom.rolling(rolling_window).mean(),
+          bop - bop.rolling(rolling_window).mean(),
+          cci - cci.rolling(rolling_window).mean(),
+          cmo - cmo.rolling(rolling_window).mean(),
+          efi - efi.rolling(rolling_window).mean(),
+          ema - ema.rolling(rolling_window).mean(),
+          hma - hma.rolling(rolling_window).mean(),
+          linreg - linreg.rolling(rolling_window).mean(),
+          slope - slope.rolling(rolling_window).mean(),
+          median - median.rolling(rolling_window).mean(),
+          macd - macd.rolling(rolling_window).mean(),
+          mom - mom.rolling(rolling_window).mean(),
+          obv - obv.rolling(rolling_window).mean(),
+          pvo - pvo.rolling(rolling_window).mean(),
+          roc - roc.rolling(rolling_window).mean(),
+          pvt - pvt.rolling(rolling_window).mean(),
+          sma - sma.rolling(rolling_window).mean(),
+          stddev - stddev.rolling(rolling_window).mean(),
+          supertrend - supertrend.rolling(rolling_window).mean(),
+          t3 - t3.rolling(rolling_window).mean(),
+          trima - trima.rolling(rolling_window).mean(),
+          true_range - true_range.rolling(rolling_window).mean(),
+          wma - wma.rolling(rolling_window).mean(),
+          kurtosis - kurtosis.rolling(rolling_window).mean(),
+          mad - mad.rolling(rolling_window).mean(),
+          skew - skew.rolling(rolling_window).mean(),
+          variance - variance.rolling(rolling_window).mean(),
+          tema - tema.rolling(rolling_window).mean(),
+          nvi - nvi.rolling(rolling_window).mean(),
+          pvi - pvi.rolling(rolling_window).mean(),
+          chop - chop.rolling(rolling_window).mean(),
+          atr - atr.rolling(rolling_window).mean(),
+          ao - ao.rolling(rolling_window).mean(),
+          dm - dm.rolling(rolling_window).mean(),
+          dema - dema.rolling(rolling_window).mean(),
+          bias - bias.rolling(rolling_window).mean(),
+          cfo - cfo.rolling(rolling_window).mean(),
+          cti - cti.rolling(rolling_window).mean(),
+          inertia - inertia.rolling(rolling_window).mean(),
+          ppo - ppo.rolling(rolling_window).mean(),
+          trix - trix.rolling(rolling_window).mean(),
+          alma - alma.rolling(rolling_window).mean(),
+          fwma - fwma.rolling(rolling_window).mean(),
+          hilo - hilo.rolling(rolling_window).mean(),
+          hl2 - hl2.rolling(rolling_window).mean(),
+          hwma - hwma.rolling(rolling_window).mean(),
+          midpoint - midpoint.rolling(rolling_window).mean(),
+          midprice - midprice.rolling(rolling_window).mean(),
+          pwma - pwma.rolling(rolling_window).mean(),
+          sinwma - sinwma.rolling(rolling_window).mean(),
+          percent_return - percent_return.rolling(rolling_window).mean()  # No rolling mean needed
+      ]
+  
+      # Stack the columns side by side and return
+      indicator_matrix = np.column_stack(new_columns)
+  
+      return indicator_matrix
