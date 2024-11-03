@@ -1,0 +1,17 @@
+top_threshold = int(threshold_var * num_stocks)
+bottom_threshold = int((1-threshold_var) * num_stocks)
+
+#ranking forward return, then labelling 1 or -1 or 0
+def rank_label_FR(matrix): 
+    labeled_matrix = np.zeros((matrix.shape[0], matrix.shape[1], 1)) 
+    for j in range(matrix.shape[1]): 
+        values_at_time_j = matrix[:, j, -1]
+
+        ranked_values = pd.Series(values_at_time_j).rank()
+    
+        labeled_values = ranked_values.apply(
+            lambda x: 1 if x <= top_threshold else (-1 if x > bottom_threshold else 0))
+    
+        labeled_matrix[:, j, -1] = labeled_values.to_numpy()
+
+    return labeled_matrix
