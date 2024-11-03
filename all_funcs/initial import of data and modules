@@ -1,0 +1,30 @@
+import numpy as np
+import pandas as pd
+import pandas_ta as ta
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+import matplotlib.pyplot as plt
+
+# all the names of my downloaded tickers
+tickers = ["AAPL", "ADBE", "AIG", "ALL", "AMD", "AMAT", "AMGN", "AMZN", "AON",
+    "APD", "AVGO", "AXP", "BAC", "BABA", "BAX", "BBY", "BDX", "BIIB", "BLK",
+    "BMY", "BK", "CB", "C", "CHD", "CI", "CINF", "CL", "CLX", "CMG",
+    "CRM", "COST", "CRWD", "CSCO", "CVS", "DDOG", "DG", "DHR", "DOCU", "DPZ",
+    "DRI", "EW", "ECL", "F", "FDX", "FMC", "GM", "GILD", "GIS", "GOOG",
+    "GS", "HD", "HOG", "HUBS", "IBM", "IFF", "ILMN", "INTC", "INTU", "ISRG",
+    "JNJ", "JPM", "K", "KHC", "KR", "LNC", "LOW", "LULU", "MA", "MDB",
+    "MCD", "MDT", "META", "MKC", "MMM", "MSFT", "MU", "NET", "NFLX", "NOW",
+    "NVDA", "OKTA", "ORCL", "PEP", "PG", "PGR", "PFE", "PLTR", "PNC", "PPG",
+    "PRU", "PYPL", "REGN", "ROKU", "RNG", "RL", "SBUX", "SCHW", "SHOP", "SKX",
+    "SNOW", "SPGI", "SPY", "SQ", "SYK", "T", "TEAM", "TMO", "TRV", "TSCO",
+    "TSLA", "TXN", "TROW", "TWLO", "UA", "UAA", "UNH", "USB", "V", "VRTX",
+    "WBA", "WDAY", "WFC", "WMT", "YUM", "ZBH", "ZM"]
+
+# just to make sure that data is ordered correctly
+def order_data(df):
+    df = df.sort_values(by='date')
+    return df
