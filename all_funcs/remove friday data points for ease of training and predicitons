@@ -1,0 +1,11 @@
+def remove_fridays(matrix):
+    #5th column is day index
+    mask = matrix[:, :, 5] != 4
+    
+    cleaned_matrix = matrix[mask]
+    
+    cleaned_matrix = cleaned_matrix.reshape(matrix.shape[0], -1, matrix.shape[2])
+    
+    return cleaned_matrix
+
+print('Done')
