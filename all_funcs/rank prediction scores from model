@@ -1,0 +1,8 @@
+def rank_prediction_proba(matrix):
+
+    prediction_scores = matrix[:, -1]
+    ranked_scores = pd.Series(prediction_scores).rank()
+
+    return ranked_scores
+
+print('Done')
