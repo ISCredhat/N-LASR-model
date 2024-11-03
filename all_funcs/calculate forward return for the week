@@ -1,0 +1,16 @@
+def calc_FR(matrix):
+    FR_mats = []
+    for i in range(matrix.shape[0]):
+        forward_return = []
+        for j in range(int((matrix.shape[1])/2)):
+            forward_return.append(((matrix[i, 2*j+1, 0] - matrix[i, 2*j, 3])/matrix[i, 2*j, 3]) * 100)
+            forward_return.append(0)
+        
+        FR_mats.append(np.array(forward_return).reshape(-1, 1))
+    new_mat = np.stack(FR_mats)
+    
+    matrix_FR = np.concatenate((matrix, new_mat), axis = 2)
+
+    return matrix_FR
+
+print('Done')
