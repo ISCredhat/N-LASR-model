@@ -1,0 +1,9 @@
+ ada = AdaBoostClassifier(
+    estimator=DecisionTreeClassifier(max_depth=depth_var),
+    n_estimators=estimators_numbers_var,
+    algorithm='SAMME',
+    learning_rate=learning_rate_var,
+    random_state=42
+)
+
+ada.fit(X_train, y_train)
