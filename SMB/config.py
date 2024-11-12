@@ -42,5 +42,6 @@ base_config = {
 def main():
     _write_config(base_config)
 
+
 if __name__ == "__main__":
     main()
