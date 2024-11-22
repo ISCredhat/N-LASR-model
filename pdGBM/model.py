@@ -18,7 +18,7 @@ start_date = '2016-11-01'
 end_date = '2016-12-01'
 X = features.loc[start_date: end_date]
 y = targets.loc[start_date: end_date]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_test_split=.2)
 
 # data = X_train
 # labels = pd.DataFrame(features.columns)
@@ -164,7 +164,7 @@ m = XGBModel(params)
 model = XGBRegressor(m)
 
 # define model evaluation method
-cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+cv = RepeatedKFold(n_splits=10, n_repeats=3, train_test_random_state=1)
 
 # evaluate model
 t = time.time()

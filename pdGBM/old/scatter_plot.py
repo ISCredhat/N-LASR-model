@@ -9,7 +9,7 @@ y = np.loadtxt('../IB4m/' + fileName + '_y.csv', delimiter=",")
 
 dfX = pds.DataFrame(x).iloc[:5000, 0:15]
 dfY = pds.DataFrame(y).iloc[:5000, 3]
-df = pds.concat([dfY, dfX], axis=1, ignore_index=True)
+df = pds.concat([dfY, dfX], axis='columns', ignore_index=True)
 scatter_matrix(df, alpha=0.1, figsize=(10, 9), marker='.', diagonal='kde')
 
 plt.show()

@@ -128,13 +128,17 @@
         "ZBH",
         "ZM"
     ],
-    "resample_interval": "30min",
-    "exchange_start_time": "14:30:00",
-    "exchange_end_time": "20:30:00",
-    "opening_trade_day_of_week": 0,
-    "closing_trade_num_days_later": 4,
-    "target_num_bins": 5,
-    "test_size": 0.7,
-    "random_state": 42,
-    "shuffle": false
+    "data_resample_interval": "30min",
+    "data_exchange_start_time": "14:30:00",
+    "data_exchange_end_time": "20:30:00",
+    "limit_drop_na_rows": 8,
+    "features_indicator_rolling_window": 200,
+    "feature_num_bins": 8,
+    "features_targets_index_difference_limit": 2,
+    "targets_opening_trade_day_of_week": 0,
+    "targets_closing_trade_num_days_later": 4,
+    "targets_num_bins": 5,
+    "train_test_split": 0.7,
+    "train_test_random_state": 42,
+    "train_test_shuffle": false
 }

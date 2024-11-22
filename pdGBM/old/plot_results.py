@@ -56,7 +56,7 @@ input("Press Enter to continue...")
     # # param_grid = dict(colsample_bytree=colsample_bytree)
     # # param_grid = dict(learning_rate=learning_rate, n_estimators=n_estimators, max_depth=max_depth)
     #
-    # kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=7)
+    # kfold = StratifiedKFold(n_splits=10, train_test_shuffle=True, train_test_random_state=7)
     # grid_search = GridSearchCV(model, param_grid, scoring="neg_log_loss", n_jobs=1, cv=kfold, verbose=1, refit=True)
     # grid_result = grid_search.fit(X, Y)
     #

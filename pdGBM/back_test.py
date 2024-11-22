@@ -14,7 +14,7 @@ df['Close'] = df['close']
 df['Open'] = df['close']
 df['High'] = df['close']
 df['Low'] = df['close']
-df.drop(['datetime', 'close', 'volume', 'num_trades'], axis=1)
+df.drop(['datetime', 'close', 'volume', 'num_trades'], axis='columns')
 
 class SmaCross(Strategy):
     def init(self):
