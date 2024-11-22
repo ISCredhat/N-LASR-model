@@ -1,11 +1,14 @@
 import pandas as pd
 import pandas_ta as ta
+from sklearn.model_selection import train_test_split
+
 from my_logger import get_logger
 
 
 from SMB.config import FEATURES_NUM_BINS, LIMIT_DROP_NA_ROWS, DATA_RESAMPLE_INTERVAL, \
     TARGETS_CLOSING_TRADE_NUM_DAYS_LATER, DATA_EXCHANGE_START_TIME, DATA_EXCHANGE_END_TIME, \
-    TARGETS_OPEN_TRADE_DAY_OF_WEEK, FEATURES_INDICATOR_ROLLING_WINDOW, TICKERS, FEATURES_TARGETS_INDEX_DIFFERENCE_LIMIT
+    TARGETS_OPEN_TRADE_DAY_OF_WEEK, FEATURES_INDICATOR_ROLLING_WINDOW, TICKERS, FEATURES_TARGETS_INDEX_DIFFERENCE_LIMIT, \
+    read_config, TRAIN_TEST_SPLIT, TRAIN_TEST_RANDOM_STATE, TRAIN_TEST_SHUFFLE
 from SMB.data import read_prices_file, resample_filter_data
 from SMB.targets import drop_na_rows_with_limit
 
@@ -336,3 +339,30 @@ def reshape_X_y(X, y):
     logger.debug(f"original shape:{y.shape}, new shape:{y_reshaped.shape}")
 
     return X_reshaped, y_reshaped
+
+
+def generate_training_test_data(config_name, X, y):
+    #
+    # generate the train test split_sections
+    #
+    config = read_config(config_name)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=config[TRAIN_TEST_SPLIT],
+        random_state=config[TRAIN_TEST_RANDOM_STATE],
+        shuffle=config[TRAIN_TEST_SHUFFLE]
+    )
+
+    #
+    # reshape the data.
+    # it is important to do this AFTER the splitting to ensure all rows of a stock are split over the train and test data.
+    #
+    X_train_stacked, y_train_stacked = reshape_X_y(X_train, y_train)
+    logger.info(f"Shapes: X:'{X.shape}', X_train:'{X_train.shape}', X_train_stacked:'{X_train_stacked.shape}'.")
+    logger.info(f"Shapes: y:'{y.shape}', y_train:'{y_train.shape}', y_train_stacked:'{y_train_stacked.shape}'.")
+
+    X_test_stacked, y_test_stacked = reshape_X_y(X_test, y_test)
+    logger.info(f"Shapes: X:'{X.shape}', X_train:'{X_test.shape}', X_train_stacked:'{X_test_stacked.shape}'.")
+    logger.info(f"Shapes: y:'{y.shape}', y_train:'{y_test.shape}', y_train_stacked:'{y_test_stacked.shape}'.")
+
+    return X_train_stacked, y_train_stacked, X_test_stacked, y_test_stacked
