@@ -1,1 +1,4 @@
 /pdGBM/data/
+/data/model/base/
+/SMB/*.log
+/SMB/*.html

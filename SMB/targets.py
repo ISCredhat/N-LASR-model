@@ -35,7 +35,6 @@ def _calc_single_stock_returns(ticker, config):
         #
         # For the OPENING & CLOSING trades we use back-filled prices so we can't trade in the past
         #
-
         data_back_fill = resampled_filtered_data.bfill()
         logger.debug(f"Data shape after back-filling for ticker {ticker}: {data_back_fill.shape}")
 
@@ -43,8 +42,8 @@ def _calc_single_stock_returns(ticker, config):
             raise ValueError("NaN values found after back-filling.")
 
         # Open trade
-        open_trade_data = data_back_fill[data_back_fill.index.dayofweek == config[TARGETS_OPEN_TRADE_DAY_OF_WEEK]]
-        entry_price = open_trade_data.groupby(open_trade_data.index.date).first()
+        opening_trade_data = data_back_fill[data_back_fill.index.dayofweek == config[TARGETS_OPEN_TRADE_DAY_OF_WEEK]]
+        entry_price = opening_trade_data.groupby(opening_trade_data.index.date).first()
         entry_price.set_index('date_time', inplace=True)
         entry_price.sort_index(inplace=True)
         # time of day is removed by pandas as there is only one entry per day
@@ -56,7 +55,7 @@ def _calc_single_stock_returns(ticker, config):
         if targets_closing_trade_num_days_later < 1:
             raise ValueError("targets_closing_trade_num_days_later must be at least 1.")
 
-        closing_trade_offset_dates = open_trade_data.index + pd.DateOffset(days=targets_closing_trade_num_days_later)
+        closing_trade_offset_dates = opening_trade_data.index + pd.DateOffset(days=targets_closing_trade_num_days_later)
         closing_trade_data = data_back_fill[data_back_fill.index.isin(closing_trade_offset_dates)]
 
         if closing_trade_data.isna().sum().sum() != 0:
@@ -140,6 +139,7 @@ def calc_targets(config, use_top_bottom_only):
     def _calc_bucketed_returns(returns):
         # method='first' MUST be used to ensure distinctly different rank values
         # We are ranking along the rows so axis='columns'.
+        # TODO explore whether to rank by row or column
         ranked_returns = all_stock_returns_drop_na.rank(axis="columns", method='first', ascending=True,
                                                         numeric_only=True)
         logger.debug(f"Ranked returns: {ranked_returns}")
@@ -152,8 +152,10 @@ def calc_targets(config, use_top_bottom_only):
             logger.error(msg)
             raise ValueError(msg)
 
+        # TODO explore whether to rank by row or column
         bucketed_returns = ranked_returns.apply(lambda x: pd.qcut(x, num_bins, labels=False), axis='columns')
         if use_top_bottom_only:
+            #  TODO generalise the setting of buckets to be zero
             bucketed_returns.replace({1: 0, 2: 0, 3: 0}, inplace=True)
 
         logger.warning(f"Bucketed returns: {bucketed_returns}")

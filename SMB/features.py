@@ -14,16 +14,13 @@ from SMB.targets import drop_na_rows_with_limit
 
 logger = get_logger()
 
-
-def _subtract_and_normalize(data_series, px_open):
-    return (data_series - px_open) / px_open
-
-
-def _calc_diff_from_mean(indicator, rolling_window):
-    return indicator - indicator.rolling(rolling_window).mean()
-
-
 def _calc_single_stick_indicators(p, rolling_window):
+    def _subtract_and_normalize(data_series, px_open):
+        return (data_series - px_open) / px_open
+
+    def _calc_diff_from_mean(indicator, rolling_window):
+        return indicator - indicator.rolling(rolling_window).mean()
+
     indicators = pd.DataFrame(index=p.index)
 
     if p.isna().sum().sum() != 0:
@@ -166,7 +163,7 @@ def _calc_single_stock_indicator(ticker, config):
         logger.debug(f"Data shape after resampling and filtering for ticker {ticker}: {resampled_filtered_data.shape}")
 
         #
-        # For missing data we will  fill FORWARD so that we don't look into the future.
+        # For missing data we will fill FORWARD so that we don't look into the future.
         #
         num_na_before_fill = resampled_filtered_data.isna().sum().sum()
         data_fwd_fill = resampled_filtered_data.ffill()
@@ -236,6 +233,7 @@ def calc_features(config, dates_index):
 
         # method='first' MUST be used to ensure distinctly different rank values
         # We are ranking along the rows so axis='columns'.
+        # TODO explore whether to rank by row or column
         ranked_indicator_values = indicator_values_drop_na.rank(axis="columns", method='first', ascending=True)
         logger.info(f"'{indicator_name}', ranked_indicator_values'{ranked_indicator_values.shape}'.")
         logger.debug(ranked_indicator_values.tail())
@@ -245,6 +243,7 @@ def calc_features(config, dates_index):
         if num_bins < 1:
             msg = "num_bins must be at least 1."
             raise ValueError(msg)
+        # TODO explore whether to rank by row or column
         bucketed_indicator_values = ranked_indicator_values.apply(lambda x: pd.qcut(x, num_bins, labels=False), axis='columns')
         logger.debug(f"'{indicator_name}', Bucketed returns: {bucketed_indicator_values}")
 
@@ -307,6 +306,7 @@ def reshape_X(X):
         .sort_index(level=[0, 1], axis='columns')
         .sort_index(level=[0, 1], axis='rows')
     )
+
 
 def reshape_y(y):
     # stack the rows -> date, stock ticker row index and indicator column names

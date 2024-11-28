@@ -56,6 +56,7 @@ def read_prices_file(ticker):
 # Modifies input data.
 # Resamples to be at 'DATA_RESAMPLE_INTERVAL', removes weekends and times outside exchange hours
 def resample_filter_data(data, data_resample_interval, data_exchange_start_time, data_exchange_end_time):
+    # FIXME we need to check the treatment of missing values!
     try:
         resampled_data = data.resample(data_resample_interval).agg({
             'open': 'first',
@@ -73,8 +74,8 @@ def resample_filter_data(data, data_resample_interval, data_exchange_start_time,
     logger.debug(resampled_data.shape)
 
     # remove weekends
-    hourly_data = resampled_data[resampled_data.index.dayofweek < 5]
-    logger.debug("Shape after removing weekends: %s", hourly_data.shape)
+    weekdayDate = resampled_data[resampled_data.index.dayofweek < 5]
+    logger.debug("Shape after removing weekends: %s", weekdayDate.shape)
 
     # remove exchange non-trading hours
     # noinspection PyTypeChecker
@@ -90,10 +91,10 @@ def resample_filter_data(data, data_resample_interval, data_exchange_start_time,
         msg = "data_exchange_end_time must be specified."
         logger.error(msg)
         raise ValueError(msg)
-    filtered_data = hourly_data[
-        (hourly_data.index.time >= data_exchange_start_time) &
-        (hourly_data.index.time <= data_exchange_end_time)
-        ]
+    filtered_data = weekdayDate[
+        (weekdayDate.index.time >= data_exchange_start_time) &
+        (weekdayDate.index.time <= data_exchange_end_time)
+    ]
     # time of day is removed by pandas as three is only one entry per day
     logger.debug(filtered_data.shape)
     logger.debug(filtered_data)
